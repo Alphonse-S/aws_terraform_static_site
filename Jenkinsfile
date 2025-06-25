@@ -3,7 +3,7 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-                git 'https://github.com/Alphonse-S/Static-Web-Host.git'
+                git 'https://github.com/Alphonse-S/aws_terraform_static_site.git'
             }
         }
         stage('Terraform Init') {
