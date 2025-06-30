@@ -99,3 +99,35 @@ variable "destination_cidr_block" {
   type        = string
   default     = "0.0.0.0/0"
 }
+
+## ec2 variables
+variable "ami_id" {
+  description = "AMI ID for the EC2 instance"
+  type        = string
+  default     = "ami-038f9d29d28d79637"
+}
+
+
+variable "instance_type" {
+  description = "Instance type for the EC2 instance"
+  type        = string
+  default     = "t2.micro"
+}
+
+variable "ec2_instance_name" {
+  description = "Name tag for the EC2 instance"
+  type        = string
+  default     = "web-server"
+}
+
+variable "ec2_key_name" {
+  description = "Key name for the EC2 instance"
+  type        = string
+  default     = "deployer" 
+}
+
+variable "security_group_name" {
+  description = "Name tag for the security group"
+  type        = string
+  default     = "static_web_ec2" 
+}
