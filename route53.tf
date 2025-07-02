@@ -1,13 +1,13 @@
 resource "aws_route53_zone" "primary" {
-  name = "swagg.click"
+  name = var.route53_zone_name
 }
 
 
 resource "aws_route53_record" "www" {
   zone_id        = aws_route53_zone.primary.zone_id
-  name           = "swagg.click"
-  type           = "A"
-  set_identifier = "primary"
+  name           = var.route53_record_name
+  type           = var.route53_record_type
+  set_identifier = var.route53_record_set_identifier
 
 
   failover_routing_policy {

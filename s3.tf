@@ -1,29 +1,26 @@
 resource "aws_s3_bucket" "static_site" {
-  bucket = "my-static-site-swagger-1995"
+  bucket = var.s3_bucket_name
 
-
-  tags = {
-    Name = "StaticWebsiteBucket"
-  }
+  tags = var.s3_bucket_tags
 }
 
 resource "aws_s3_bucket_website_configuration" "static_site" {
   bucket = aws_s3_bucket.static_site.id
 
   index_document {
-    suffix = "index.html"
+    suffix = var.s3_bucket_website_configuration.index_document_suffix
   }
 
   error_document {
-    key = "error.html"
+    key = var.s3_bucket_website_configuration.error_document_key
   }
 
   routing_rule {
     condition {
-      key_prefix_equals = "docs/"
+      key_prefix_equals = var.s3_bucket_website_configuration.routing_rule.condition.key_prefix_equals
     }
     redirect {
-      replace_key_prefix_with = "documents/"
+      replace_key_prefix_with = var.s3_bucket_website_configuration.routing_rule.redirect.replace_key_prefix_with
     }
   }
 }
@@ -31,10 +28,10 @@ resource "aws_s3_bucket_website_configuration" "static_site" {
 resource "aws_s3_bucket_public_access_block" "public_access" {
   bucket = aws_s3_bucket.static_site.id
 
-  block_public_acls       = false
-  block_public_policy     = false
-  ignore_public_acls      = false
-  restrict_public_buckets = false
+  block_public_acls       = var.block_public_acls
+  block_public_policy     = var.block_public_policy
+  ignore_public_acls      = var.ignore_public_acls
+  restrict_public_buckets = var.restrict_public_buckets
 }
 
 resource "aws_s3_bucket_policy" "bucket_policy" {

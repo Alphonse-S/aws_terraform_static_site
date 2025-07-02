@@ -1,9 +1,11 @@
+## Define provider variables
 variable "aws_region" {
   description = "AWS region"
   type        = string
   default     = "eu-west-2"
 }
 
+## Define VPC variables
 variable "vpc_cidr_block" {
   description = "CIDR block for the VPC"
   type        = string
@@ -100,7 +102,7 @@ variable "destination_cidr_block" {
   default     = "0.0.0.0/0"
 }
 
-## ec2 variables
+## Define ec2 variables
 variable "ami_id" {
   description = "AMI ID for the EC2 instance"
   type        = string
@@ -130,4 +132,154 @@ variable "security_group_name" {
   description = "Name tag for the security group"
   type        = string
   default     = "static_web_ec2" 
+}
+
+## Define variables for s3 bucket
+variable "s3_bucket_name" {
+  description = "Name of the S3 bucket"
+  type        = string
+  default     = "my-static-site-swagger-1995" 
+}
+
+variable "s3_bucket_tags" {
+  description = "Tags for the S3 bucket"
+  type        = map(string)
+  default     = {
+    Name = "StaticWebsiteBucket" 
+  }
+}
+
+variable "block_public_acls" {
+  description = "Block public ACLs for the S3 bucket"
+  type        = bool
+  default     = false
+}
+
+variable "block_public_policy" {
+  description = "Block public policy for the S3 bucket"
+  type        = bool
+  default     = false
+}
+
+variable "ignore_public_acls" {
+  description = "Ignore public ACLs for the S3 bucket"
+  type        = bool
+  default     = false
+}
+
+variable "restrict_public_buckets" {
+  description = "Restrict public buckets for the S3 bucket"
+  type        = bool
+  default     = false
+}
+
+## Define an Object Variable for the s3 bucket website configuration
+variable "s3_bucket_website_configuration" {
+  description = "Website configuration for the S3 bucket"
+  type = object({
+    index_document_suffix = string
+    error_document_key    = string
+    routing_rule          = object({
+      condition = object({
+        key_prefix_equals = string
+      })
+      redirect = object({
+        replace_key_prefix_with = string
+      })
+    })
+  })
+  default = {
+    index_document_suffix = "index.html"
+    error_document_key    = "error.html"
+    routing_rule = {
+      condition = {
+        key_prefix_equals = "docs/"
+      }
+      redirect = {
+        replace_key_prefix_with = "documents/"
+      }
+    }
+  }
+}
+
+
+## Define Route53 variables
+variable "route53_zone_name" {
+  description = "Name of the Route53 zone"
+  type        = string
+  default     = "swagg.click"
+}
+
+variable "route53_record_name" {
+  description = "Name of the Route53 record"
+  type        = string
+  default     = "www"
+}
+
+variable "route53_record_type" {
+  description = "Type of the Route 53 record"
+  type        = string
+  default     = "A" 
+}
+
+variable "route53_record_set_identifier" {
+  description = "Set identifier for the Route 53 record"
+  type        = string
+  default     = "primary" 
+}
+
+## Define cloudfront variables
+variable "cloudfront_origin_domain_name" {
+  description = "Domain name of the origin for the CloudFront distribution"
+  type        = string
+  default     = "my-static-site-swagger-1995.s3.eu-west-2.amazonaws.com" 
+}
+
+variable "cloudfront_origin_id" {
+  description = "Origin ID for the CloudFront distribution"
+  type        = string
+  default     = "s3-origin-static-website"
+}
+
+
+variable "cloudfront_allowed_methods" {
+  description = "Allowed methods for the default cache behavior"
+  type        = list(string)
+  default     = ["GET", "HEAD"]
+}
+
+variable "cloudfront_cached_methods" {
+  description = "Cached methods for the default cache behavior"
+  type        = list(string)
+  default     = ["GET", "HEAD"]
+}
+
+variable "cloudfront_target_origin_id" {
+  description = "Target origin ID for the default cache behavior"
+  type        = string
+  default     = "s3-origin-static-website"
+}
+
+variable "cloudfront_viewer_protocol_policy" {
+  description = "Viewer protocol policy for the default cache behavior"
+  type        = string
+  default     = "allow-all"
+}
+
+variable "cloudfront_min_ttl" {
+  description = "Minimum TTL for the default cache behavior"
+  type        = number
+  default     = 0
+}
+
+variable "cloudfront_default_ttl" {
+  description = "Default TTL for the default cache behavior"
+  type        = number
+  default     = 3600
+}
+
+variable "cloudfront_max_ttl" {
+  description = "Maximum TTL for the default cache behavior"
+  type        = number
+  default     = 86400
 }

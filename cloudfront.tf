@@ -1,7 +1,7 @@
 resource "aws_cloudfront_distribution" "static_site" {
   origin {
-    domain_name = aws_s3_bucket.static_site.bucket_regional_domain_name
-    origin_id   = "s3-origin-static-website"
+    domain_name = var.cloudfront_origin_domain_name
+    origin_id   = var.cloudfront_origin_id
 
   }
 
@@ -11,9 +11,9 @@ resource "aws_cloudfront_distribution" "static_site" {
   default_root_object = "index.html"
 
   default_cache_behavior {
-    allowed_methods  = ["GET", "HEAD"]
-    cached_methods   = ["GET", "HEAD"]
-    target_origin_id = "s3-origin-static-website"
+    allowed_methods  = var.cloudfront_allowed_methods
+    cached_methods   = var.cloudfront_cached_methods
+    target_origin_id = var.cloudfront_target_origin_id
 
     forwarded_values {
       query_string = false
@@ -23,10 +23,10 @@ resource "aws_cloudfront_distribution" "static_site" {
       }
     }
 
-    viewer_protocol_policy = "allow-all"
-    min_ttl                = 0
-    default_ttl            = 3600
-    max_ttl                = 86400
+    viewer_protocol_policy = var.cloudfront_viewer_protocol_policy
+    min_ttl                = var.cloudfront_min_ttl
+    default_ttl            = var.cloudfront_default_ttl
+    max_ttl                = var.cloudfront_max_ttl
   }
 
   price_class = "PriceClass_100"
